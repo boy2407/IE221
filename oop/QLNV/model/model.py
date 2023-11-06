@@ -17,10 +17,12 @@ class CongTy:
             nv.xuat_BanHang()
 
     def tim_nv_by_maNV(self, maNV):
+
         for nv in self.dsBanHang + self.dsVanPhong:
             if nv.maNV == maNV:
                 return nv
-            return None
+
+        return None
 
     def nv_bh_luong_thap_nhat(self):
         if not self.dsBanHang:
@@ -141,3 +143,10 @@ if nv_bh_co_luong_thap_nhat is not None:
     print('Nhân viên kinh doanh có lương thấp nhất:', nv_bh_co_luong_thap_nhat.hoTen)
 else:
     print('Không có nhân viên bán hàng')
+
+nv_tim = cty.tim_nv_by_maNV('VP1')
+
+if nv_tim is not None:
+    print('Nhân viên tìm được là:',nv_tim.maNV)
+else:
+    print('Không có nhân viên cần tìm')
