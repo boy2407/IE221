@@ -88,42 +88,11 @@ class nvBanHang:
 
 
 cty = CongTy(maCty='CT1', tenCty='Cong Ty 1')
-# kd1 = nvBanHang(maNV='KD1', hoTen='Bán hàng 1', luonngCB=2000, soSP=245)
-# kd2 = nvBanHang(maNV='KD2', hoTen='Bán hàng 2', luonngCB=1500, soSP=340)
-# kd3 = nvBanHang(maNV='KD3', hoTen='Bán hàng 3', luonngCB=1500, soSP=200)
-#
-# vp1 = vnVanPhong(maNV='VP1', hoTen='Văn Phòng 1', luonngCB=2000, soSP=30)
-# vp2 = vnVanPhong(maNV='VP2', hoTen='Văn Phòng 2', luonngCB=1400, soSP=290)
-# vp3 = vnVanPhong(maNV='VP3', hoTen='Văn Phòng 3', luonngCB=1500, soSP=39)
-#
-# kd1.tinh_luong_hang_thang()
-# kd2.tinh_luong_hang_thang()
-# kd3.tinh_luong_hang_thang()
-#
-# vp1.tinh_luong_hang_thang()
-# vp2.tinh_luong_hang_thang()
-# vp3.tinh_luong_hang_thang()
-#
-# cty.dsBanHang.append(kd1)
-# cty.dsBanHang.append(kd2)
-# cty.dsBanHang.append(kd3)
-#
-# cty.dsVanPhong.append(vp1)
-# cty.dsVanPhong.append(vp2)
-# cty.dsVanPhong.append(vp3)
-
 
 ds_vp = [vnVanPhong(maNV=f'VP{i}', hoTen=f'Van Phong {i}', luonngCB=random.randint(10_000_000, 50_000_000),
                     soNG=random.randint(20, 30)) for i in range(1, 6)]
 ds_kd = [nvBanHang(maNV=f'BH{i}', hoTen=f'Ban Hang {i}', luonngCB=random.randint(20_000_000, 45_000_000),
                    soSP=random.randint(100, 500)) for i in range(1, 6)]
-
-# for nv in ds_vp:
-#     nv.tinh_luong_hang_thang()
-#
-# for nv in ds_kd:
-#     nv.tinh_luong_hang_thang()
-
 
 cty.them_nhieu_nv_van_phong(ds_vp)
 cty.them_nhieu_nv_kinh_doanh(ds_kd)
@@ -133,14 +102,15 @@ cty.tinh_luong_hang_thang()
 cty.xuat_tat_ca_nhan_vien()
 
 nv_co_luong_cao_nhat = cty.nv_co_luong_cao_nhat()
+
 if nv_co_luong_cao_nhat is not None:
-    print('Nhân viên có lương cao nhất:', nv_co_luong_cao_nhat.hoTen)
+    print('Nhân viên có lương cao nhất:', nv_co_luong_cao_nhat)
 else:
     print('Không có nhân viên')
 
 nv_bh_co_luong_thap_nhat = cty.nv_bh_luong_thap_nhat()
 if nv_bh_co_luong_thap_nhat is not None:
-    print('Nhân viên kinh doanh có lương thấp nhất:', nv_bh_co_luong_thap_nhat.hoTen)
+    print('Nhân viên kinh doanh có lương thấp nhất:', nv_bh_co_luong_thap_nhat)
 else:
     print('Không có nhân viên bán hàng')
 
