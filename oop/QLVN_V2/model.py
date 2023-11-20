@@ -69,6 +69,7 @@ class NhanVien(abcNhanVien):
         self._luonngCB = kwargs.get('luonngCB', 0)
         self._luongHT = kwargs.get('luongHT', 0)
 
+
     def __str__(self):
         return str((self._maNV, self._hoTen, self._luonngCB, self._luongHT))
 
@@ -81,36 +82,6 @@ class NhanVien(abcNhanVien):
 
     def tinhLuong(self):
         pass
-
-
-class VanPhong(NhanVien):
-    soNV = 0
-
-    def __init__(self, maNV: int, **kwargs):
-        super().__init__(maNV, **kwargs)
-        self.__soNG = kwargs.get('soNG', 0)
-        VanPhong.soNV += 1
-
-    @property
-    def soNG(self):
-        return self.__soNG
-    @soNG.setter
-    def soNG(self,valueNew):
-        self.__soNG= valueNew
-
-    def tinh_luong_hang_thang(self):
-        self._luongHT = self._luonngCB + (self.__soNG * 150_000)
-
-    def xuat(self):
-        super().xuat()
-        print("Số ngày làm việc:", self.__soNG)
-    @classmethod
-    def soLuong(cls):
-        print('Số lượng', VanPhong.soNV)
-    def __str__(self):
-        return str((self._maNV, self._hoTen, self.__soNG, self._luonngCB, self._luongHT))
-
-
 class BanHang(NhanVien):
     soNV = 0
 
@@ -138,6 +109,59 @@ class BanHang(NhanVien):
     @classmethod
     def soLuong(cls):
         print('Số lượng', BanHang.soNV)
+class VanPhong(NhanVien):
+    soNV = 0
+
+    def __init__(self, maNV: int, **kwargs):
+        super().__init__(maNV, **kwargs)
+        self.__soNG = kwargs.get('soNG', 0)
+        VanPhong.soNV += 1
+
+    @property
+    def soNG(self):
+        return self.__soNG
+    @soNG.setter
+    def soNG(self,valueNew):
+        self.__soNG = valueNew
+
+    def tinh_luong_hang_thang(self):
+        self._luongHT = self._luonngCB + (self.__soNG * 150_000)
+
+    def xuat(self):
+        super().xuat()
+        print("Số ngày làm việc:", self.__soNG)
+    @classmethod
+    def soLuong(cls):
+        print('Số lượng', VanPhong.soNV)
+    def __str__(self):
+        return str((self._maNV, self._hoTen, self.__soNG, self._luonngCB, self._luongHT))
+
+
+class NhanVienQL(VanPhong):
+    def __init__(self, maNV: int, **kwargs):
+        super().__init__(maNV, **kwargs)
+        self.__heSoTN = kwargs.get('heSTN', 0)
+
+    def __str__(self):
+        return str((self._maNV, self._hoTen, self.soNG, self._luonngCB, self._luongHT, self.__heSoTN))
+
+
+    def xuat(self):
+        print("\n")
+        print("Mã nhân viên Văn Phòng:", self._maNV)
+        print("Họ tên nhân viên:", self._hoTen)
+        print("Lương cơ bản: {:,.0f} VNĐ".format(self._luonngCB))
+        print("Lương hằng tháng : {:,.0f} VNĐ".format(self._luongHT))
+
+    def tinh_luong_hang_thang(self):
+        if self.__heSoTN > 3.5:
+            self._luongHT = ((self.__heSoTN * 250_000 * self.soNG) + self._luonngCB) * 1.2
+        else:
+            self._luongHT = (self.__heSoTN * 250_000 * self.soNG) + self._luonngCB
+
+    def xuat(self):
+        super().xuat()
+        print("Hệ số trắc nghiệm:", self.__heSoTN)
 
 
 if __name__ == '__main__':
@@ -149,9 +173,12 @@ if __name__ == '__main__':
     ds_kd = [BanHang(maNV=i * 1000, hoTen=f'Ban Hang {i}', luonngCB=random.randint(20_000_000, 45_000_000),
                      soSP=random.randint(100, 500)) for i in range(1, 6)]
 
+    ds_ql = [NhanVienQL(maNV=i * 300, hoTen=f'Quan ly{i}', luonngCB=random.randint(40_000_000, 100_000_000),
+                     soNG=random.randint(100, 500), heSTN=random.randint(1, 3)) for i in range(1, 3)]
 
     cty.them_nhieu_nv(ds_vp)
     cty.them_nhieu_nv(ds_kd)
+    cty.them_nhieu_nv(ds_ql)
 
     cty.tinh_luong_hang_thang()
     cty.xuat_tat_ca_nhan_vien()
