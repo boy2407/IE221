@@ -2,6 +2,7 @@ import random
 from abc import ABC, abstractmethod
 from DataBase import DataBase
 
+
 class CongTy:
     soNV = 0
 
@@ -40,6 +41,7 @@ class CongTy:
             nv.tinh_luong_hang_thang()
 
     """Database"""
+
     def luu_luong_hang_thang(self):
         db = DataBase(driver='SQL Server', server='DESKTOP-IHQL3VH', database='qlnv', username='sa', password='12345')
         db.connect()
@@ -60,15 +62,17 @@ class CongTy:
         for nv in self.__dsNV:
             luongHT = nv._luongHT
 
-            query = f"""SELECT * FROM LuongHangThang WHERE MaNhanVien = '{nv._maNV}';"""
-            db.execute_query(query)
-            record = db.fetch_one()
-
-            if record is None:
-                query = f"""INSERT INTO LuongHangThang (MaNhanVien, LuongHT) VALUES ('{nv._maNV}', {luongHT});"""
-            else:
-                query = f"""UPDATE LuongHangThang SET LuongHT = {luongHT} WHERE MaNhanVien = '{nv._maNV}';"""
-
+            # Kiểm tra xem MaNhanVien đã tồn tại trong bảng LuongHangThang chưa
+            query = f"""IF EXISTS (SELECT 1 FROM LuongHangThang WHERE MaNhanVien = '{nv._maNV}')
+                        BEGIN
+                            -- Nếu MaNhanVien đã tồn tại trong bảng, cập nhật LuongHT
+                            UPDATE LuongHangThang SET LuongHT = {luongHT} WHERE MaNhanVien = '{nv._maNV}';
+                        END
+                        ELSE
+                        BEGIN
+                            -- Nếu MaNhanVien chưa tồn tại trong bảng, thêm bản ghi mới
+                            INSERT INTO LuongHangThang (MaNhanVien, LuongHT) VALUES ('{nv._maNV}', {luongHT});
+                        END"""
             db.execute_query(query)
 
         # Đảm bảo thay đổi được lưu vào cơ sở dữ liệu
