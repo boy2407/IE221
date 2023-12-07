@@ -110,6 +110,10 @@ class DataBase:
                     VALUES ('{nv._maNV}', '{nv._loaiNV}', {0}, {0});"""
         self.execute_query(query)
 
+        query = f"""INSERT INTO LuongHangThang (MaNhanVien,LuongHT )
+                          VALUES ('{nv._maNV}', {0});"""
+        self.execute_query(query)
+
         # Commit the changes
         self.conn.commit()
         print('add_employee')

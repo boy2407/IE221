@@ -2,6 +2,7 @@ import random
 from abc import ABC, abstractmethod
 from DataBase import DataBase
 
+
 class CongTy:
     soNV = 0
 
@@ -12,9 +13,12 @@ class CongTy:
         CongTy.soNV += 1
 
     """return dsNV"""
+
     @property
     def dsNV(self):
+        self.loadDatabase()
         return self.__dsNV
+
     def tim_nv_by_maNV(self, maNV: int):
 
         for nv in self.__dsNV:
@@ -46,12 +50,10 @@ class CongTy:
         db = DataBase()
         db.save_monthly_salary(self.__dsNV)
 
-
     def them_nv(self, nv):
         db = DataBase()
         db.add_employee(nv)
         self.__dsNV.append(nv)
-
 
     def xuat_tat_ca_nhan_vien(self):
         for nv in self.__dsNV:
@@ -67,32 +69,35 @@ class CongTy:
     def tienThuong(tien):
         return tien * 1.2
 
-
     """thao tác với db """
+
     def load_loaiNV(self):
         db = DataBase()
         loai_nhan_vien = db.employee_Type()
         return loai_nhan_vien
 
     def loadDatabase(self):
+        self.__dsNV=[]
         # Sử dụng lớp Database
         db = DataBase()
         nhanvien = db.list_of_Employee()
         for nv in nhanvien:
 
             if nv[1] == 'Bán Hàng':
-                temp = BanHang(maNV=nv[0], hoTen=nv[2], luonngCB=float(nv[3]),
-                               soSP=nv[5],luongHT=float(nv[6]))
+                temp = BanHang(maNV=nv[0], loaiNV=nv[1], hoTen=nv[2], luonngCB=float(nv[3]), soSP=nv[5],
+                               luongHT=float(nv[6]))
+
                 self.__dsNV.append(temp)
 
             elif nv[1] == 'Văn Phòng':
-                temp = VanPhong(maNV=nv[0], hoTen=nv[2], luonngCB=float(nv[3]),
-                                soNG=nv[4],luongHT=float(nv[6]))
+
+                temp = VanPhong(maNV=nv[0], loaiNV=nv[1], hoTen=nv[2], luonngCB=float(nv[3]), soNG=nv[4],
+                                luongHT=float(nv[6]))
+
                 self.__dsNV.append(temp)
             else:
-                temp = NhanVien(maNV=nv[0], hoTen=nv[2], luonngCB=float(nv[3]),luongHT=float(nv[6]))
+                temp = NhanVien(maNV=nv[0], loaiNV=nv[1], hoTen=nv[2], luonngCB=float(nv[3]), luongHT=float(nv[6]))
                 self.__dsNV.append(temp)
-
 
 
 class abcNhanVien(ABC):
@@ -129,6 +134,7 @@ class NhanVien(abcNhanVien):
     def row(self, i):
         return (i, self._maNV, self._hoTen, self._luongCB, self._luongHT)
 
+
 class BanHang(NhanVien):
     soNV = 0
 
@@ -151,11 +157,14 @@ class BanHang(NhanVien):
     def xuat(self):
         super().xuat()
         print("Số ngày làm việc:", self.__soSP)
+
     def __str__(self):
         return str((self._maNV, self._hoTen, self._luongCB, self._luongHT, self.__soSP,))
+
     @classmethod
     def soLuong(cls):
         print('Số lượng', BanHang.soNV)
+
 
 class VanPhong(NhanVien):
     soNV = 0
@@ -187,6 +196,7 @@ class VanPhong(NhanVien):
     def __str__(self):
         return str((self._maNV, self._hoTen, self._luongCB, self._luongHT, self.__soNG,))
 
+
 class NhanVienQL(VanPhong):
     def __init__(self, maNV: int, **kwargs):
         super().__init__(maNV, **kwargs)
@@ -211,4 +221,3 @@ class NhanVienQL(VanPhong):
     def xuat(self):
         super().xuat()
         print("Hệ số trắc nghiệm:", self.__heSoTN)
-
